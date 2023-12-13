@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RandomPatrol : MonoBehaviour
 {
@@ -39,6 +40,14 @@ public class RandomPatrol : MonoBehaviour
         return new Vector2(randomX, randomY);
     }
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Planet");
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+    }
 
 
 
@@ -49,5 +58,4 @@ public class RandomPatrol : MonoBehaviour
 
 
 
-    
 }
