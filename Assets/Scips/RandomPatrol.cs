@@ -12,7 +12,14 @@ public class RandomPatrol : MonoBehaviour
 
     Vector2 targetPosition;
 
-    public float speed;
+    public float minSpeed;
+    public float maxSpeed;
+
+    float speed;
+
+    public float secondsToMaxDifficulty;
+
+    public GameObject restartPanel;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +32,8 @@ public class RandomPatrol : MonoBehaviour
     {
         if ((Vector2)transform.position != targetPosition)
         {
+            speed = Mathf.Lerp(minSpeed, maxSpeed, GetDifficultyPercent());
+
             transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
         }
         else
@@ -36,26 +45,30 @@ public class RandomPatrol : MonoBehaviour
     Vector2 GetRandomPostion()
     {
         float randomX = Random.Range(minX, maxX);
-        float randomY = Random.Range(minX, maxY);
+        float randomY = Random.Range(minY, maxY);
         return new Vector2(randomX, randomY);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Planet");
+        if (collision.tag == "Planet")
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            restartPanel.SetActive(true);
         }
-
     }
 
-
-
-
-
-
-
-
-
-
+    float GetDifficultyPercent()
+    {
+        return Mathf.Clamp01(Time.timeSinceLevelLoad / secondsToMaxDifficulty);
+    }
 }
+
+
+
+
+
+
+
+
+
+

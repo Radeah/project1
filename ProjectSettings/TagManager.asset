@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Circle Dudes
   - Planet
+  - Play
   layers:
   - Default
   - TransparentFX
