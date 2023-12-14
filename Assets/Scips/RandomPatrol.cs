@@ -21,6 +21,9 @@ public class RandomPatrol : MonoBehaviour
 
     public GameObject restartPanel;
 
+    // Static flag to determine if movement should stop for all planets
+    static bool shouldStopAllPlanets = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,15 +33,18 @@ public class RandomPatrol : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if ((Vector2)transform.position != targetPosition)
+        if (!shouldStopAllPlanets)
         {
-            speed = Mathf.Lerp(minSpeed, maxSpeed, GetDifficultyPercent());
+            if ((Vector2)transform.position != targetPosition)
+            {
+                speed = Mathf.Lerp(minSpeed, maxSpeed, GetDifficultyPercent());
 
-            transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
-        }
-        else
-        {
-            targetPosition = GetRandomPostion();
+                transform.position = Vector2.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+            }
+            else
+            {
+                targetPosition = GetRandomPostion();
+            }
         }
     }
 
@@ -53,6 +59,21 @@ public class RandomPatrol : MonoBehaviour
     {
         if (collision.tag == "Planet")
         {
+            // Set the static flag to stop movement for all planets
+            shouldStopAllPlanets = true;
+
+            // Disable the renderer or set the game object inactive
+            Renderer planetRenderer = GetComponent<Renderer>();
+            if (planetRenderer != null)
+            {
+                planetRenderer.enabled = false;
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
+
+            // Show the restart panel
             restartPanel.SetActive(true);
         }
     }
@@ -62,6 +83,10 @@ public class RandomPatrol : MonoBehaviour
         return Mathf.Clamp01(Time.timeSinceLevelLoad / secondsToMaxDifficulty);
     }
 }
+
+
+
+
 
 
 
